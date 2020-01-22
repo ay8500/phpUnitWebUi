@@ -47,6 +47,7 @@ class phpunit {
         $aktMethod="";
         $lines = explode("\n",file_get_contents($fileName));
         foreach ($lines as $line) {
+            $line = str_replace("  "," ",$line);
             $p1 = strpos($line,"public function test");
             if ($p1!==false) {
                 $p2 = strpos($line,"()",$p1);
@@ -56,6 +57,7 @@ class phpunit {
                     $methods[$aktMethod]=0;
                 }
             }
+            $line = str_replace(" ","",$line);
             if(strpos($line,'$this->assert')!==false && $aktMethod!="") {
                 $methods[$aktMethod]++;
             }
