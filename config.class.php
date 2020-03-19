@@ -15,11 +15,10 @@ class config {
      */
     public static $SiteTitle = 'PhpUnit webinterface';
 
-
     /**
      * @var string sender and reply e-mail address
      */
-    public static $senderMail = 'code@blue-l.de';
+    public static $siteMail ="code@blue-l.de";
 
     /**
      * @var string start directory for *Test.php test files
@@ -42,6 +41,6 @@ class config {
     /**
      * @var string the version of php unit mainly used for parameter in css and js files
      */
-    public static $version = "2.01/25-11-2019";
+    public static $webAppVersion = "2.01/25-11-2019";
 
 }

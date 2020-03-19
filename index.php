@@ -116,8 +116,8 @@ if (isset($_GET["action"]) && $_GET["action"]="batch") {
 function sendTestResultsMail($recipient,$subject,$ok,$error,$time) {
     $subject = \maierlabs\phpunit\config::$SiteTitle.' '.$subject;
     $text = 'Reasults ok:'.$ok." error:".$error. " time:".number_format($time,2)."ms";
-    $header = 'From: ' . \maierlabs\phpunit\config::$senderMail. "\r\n" .
-        'Reply-To: ' . \maierlabs\phpunit\config::$senderMail. "\r\n" .
+    $header = 'From: ' . \maierlabs\phpunit\config::$siterMail. "\r\n" .
+        'Reply-To: ' . \maierlabs\phpunit\config::$siteMail. "\r\n" .
         'X-Mailer: PHP/' . phpversion();
 
     return mail($recipient, $subject, $text, $header);
@@ -137,7 +137,7 @@ function sendTestResultsMail($recipient,$subject,$ok,$error,$time) {
     <body>
         <div class="container-fluid well">
             <h3><?php echo(\maierlabs\phpunit\config::$SiteTitle)?></h3>
-            <div style="position: relative;top:-13px;">&copy; MaierLabs version:<?php echo (\maierlabs\phpunit\config::$version)?></div>
+            <div style="position: relative;top:-13px;">&copy; MaierLabs version:<?php echo (\maierlabs\phpunit\config::$webAppVersion)?></div>
             <div class="panel-body">
                 <div><button class="btn btn-success" onclick="getTestFiles()">Check server for tests</button>
                 <button class="btn btn-success" onclick="runAlltests()">Run all unit tests</button></div>
