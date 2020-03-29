@@ -28,6 +28,7 @@ class config {
         array("name"=>"Brassai","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."brassai"),
         array("name"=>"Component Database","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."cdb"),
         array("name"=>"WebCam","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."webcam"),
+        array("name"=>"AddressOk","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."addressok"),
     );
 
 
