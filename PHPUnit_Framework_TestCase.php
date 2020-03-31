@@ -186,6 +186,12 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /******************************[ Only in Levis Php Framework ]**************************/
+
+    /**
+     * collected test results
+     * @return stdClass
+     */
     public function assertGetUnitTestResult() {
         $ret = new stdClass();
         $ret->testResult = $this->assertError==0;
@@ -194,6 +200,43 @@ class PHPUnit_Framework_TestCase {
         $ret->errorText = $this->errorText;
         return $ret;
     }
+
+    /**
+     * Call url
+     * @param $url the url
+     * @param bool $isResultJson default=true
+     * @param null $post  associative array of post parameter
+     * @return stdClass|null
+     */
+    public function callTestUrl($url,$isResultJson=true, $post=null){
+        if ($url==null || strlen($url)==0)
+            return null;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch,CURLOPT_COOKIE,"LPFW=kf9p3b0pk1hnain1gmh8pqso36");
+        if($post!=null) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($post));
+        }
+        $resp = curl_exec($ch);
+        if ($resp===false)
+            return null;
+        $ret = new stdClass();
+        if ($isResultJson)
+            $ret->content = json_decode($resp,true);
+        else
+            $ret->content = $resp;
+        $ret->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $ret->content_type = curl_getinfo($ch,CURLINFO_CONTENT_TYPE);
+        curl_close($ch);
+        return $ret;
+    }
+
 
 }
 

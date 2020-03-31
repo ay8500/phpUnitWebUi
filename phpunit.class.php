@@ -33,7 +33,7 @@ class phpunit {
         $methods=get_class_methods($className);
         if ($methods!=null) {
             foreach ($methods as $method) {
-                if (!in_array(strtolower($method), array("setup", "teardown")) && strpos($method, "assert") !== 0) {
+                if (!in_array(strtolower($method), array("setup", "teardown","calltesturl")) && strpos($method, "assert") === false) {
                     $ret[] = $method;
                 }
             }
