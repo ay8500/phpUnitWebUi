@@ -8,7 +8,7 @@ class PHPUnit_Framework_TestCase {
 
 
     public function assertStringStartsWith($prefix,$actual,$message='') {
-        if ($prefix===substr($actual,0,strlen($prefix))) {
+        if ($actual!=null && $prefix===substr($actual,0,strlen($prefix))) {
             $this->assertOk++;
         } else {
             $this->assertError++;
@@ -20,9 +20,34 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    public function assertStringStartsNotWith($prefix,$actual,$message='') {
+        if ($actual==null || $prefix!==substr($actual,0,strlen($prefix))) {
+            $this->assertOk++;
+        } else {
+            $this->assertError++;
+            if ($message=='') {
+                $this->errorText .= 'Failed asserting that ' . $actual. '  not starts with '.$prefix."<br />";
+            } else {
+                $this->errorText .= $message."<br />";
+            }
+        }
+    }
 
     public function assertStringEndsWith($suffix,$actual,$message='') {
-        if ($suffix===substr($actual,strlen($actual)-strlen($suffix))) {
+        if ($actual!=null && $suffix===substr($actual,strlen($actual)-strlen($suffix))) {
+            $this->assertOk++;
+        } else {
+            $this->assertError++;
+            if ($message=='') {
+                $this->errorText .= 'Failed asserting that ' . $actual. '  ends with '.$suffix."<br />";
+            } else {
+                $this->errorText .= $message."<br />";
+            }
+        }
+    }
+
+    public function assertStringEndsNotWith($suffix,$actual,$message='') {
+        if ($actual==null || $suffix!==substr($actual,strlen($actual)-strlen($suffix))) {
             $this->assertOk++;
         } else {
             $this->assertError++;

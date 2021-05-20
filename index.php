@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
  * User: Levi
  * Date: 07.12.2018
- * Time: 00:05
  */
 include_once 'config.class.php';
 include_once 'phpunit.class.php';
@@ -136,21 +134,43 @@ function sendTestResultsMail($recipient,$subject,$ok,$error,$time) {
     </header>
     <body>
         <div class="container-fluid well">
-            <h3><?php echo(\maierlabs\phpunit\config::$SiteTitle)?></h3>
-            <div style="position: relative;top:-13px;">&copy; MaierLabs version:<?php echo (\maierlabs\phpunit\config::$webAppVersion)?></div>
-            <div class="panel-body">
-                <div><button class="btn btn-success" onclick="getTestFiles()">Check server for tests</button>
-                <button class="btn btn-success" onclick="runAlltests()">Run all unit tests</button></div>
-                <div id="filesGauge" style="display: inline-block;width: 700px; height: 400px;"></div>
-                <div id="fileGauge" style="display: inline-block; width: 700px; height: 400px;"></div>
+            <div class="row">
+                <div class="col-4 col-md-4" >
+                    <div style="height:110px;margin-bottom: 10px">
+                        <div style="font-size: 30px"><?php echo(\maierlabs\phpunit\config::$SiteTitle)?></div>
+                        <div style="">&copy; MaierLabs version:<?php echo (\maierlabs\phpunit\config::$webAppVersion)?></div>
+                        <button class="btn btn-success" onclick="getTestFiles()">Check server for tests</button>
+                        <button class="btn btn-success" onclick="runAlltests()">Run all unit tests</button>
+                    </div>
+                    <div id="projectsGauge" style="display: inline-block; width: 100%; height: 350px;padding:5px;background-color: white; border-radius: 10px"></div>
+                </div>
+                <div class="col-4 col-md-4" >
+                    <div style="height:110px;background-color:white;border-radius: 10px;vertical-align: top;margin-bottom: 10px">
+                        <div style="margin-left: 20px;display: inline-block;vertical-align: top">
+                            <b>Test Status</b>
+                        </div>
+                        <div style="margin-left: 20px;display: inline-block">
+                            <span style="width:65px;display: inline-block">Projects:</span>
+                            <span class="badge" style="background-color: green" id="pok">0</span><span class="badge" style="background-color: red" id="perror">0</span><br/>
+                            <span style="width:65px;display: inline-block">Files:</span>
+                            <span class="badge" style="background-color: green" id="fok">0</span><span class="badge" style="background-color: red" id="ferror">0</span><br/>
+                            <span style="width:65px;display: inline-block">Tests:</span>
+                            <span class="badge" style="background-color: green" id="tok">0</span><span class="badge" style="background-color: red" id="terror">0</span><br/>
+                            <span style="width:65px;display: inline-block">Asserts:</span>
+                            <span class="badge" style="background-color: green" id="aok">0</span><span class="badge" style="background-color: red" id="aerror">0</span><br/>
+                        </div>
+                    </div>
+                    <div id="filesGauge" style="display: inline-block;width: 100%; height: 350px;padding:5px;background-color: white; border-radius: 10px;"></div>
+                </div>
+                <div class="col-4 col-md-4" >
+                    <div style="height:110px;background-color: white;border-radius: 10px;margin-bottom: 10px">
+                        <div style="display: inline-block; vertical-align: top;margin-left: 20px;"><b>Speed</b><br/>test files per second</div>
+                        <div style="height:100px;display: inline-block; margin-left: 20px;" id="speedGauge"></div>
+                    </div>
+                    <div id="fileGauge" style="display: inline-block; width: 100%; height: 350px;padding:5px;background-color: white; border-radius: 10px;"></div>
+                </div>
             </div>
             <div class="panel-body">
-                <div>
-                    Projects:<span class="badge" style="background-color: green" id="pok">0</span><span class="badge" style="background-color: red" id="perror">0</span>
-                    Files:<span class="badge" style="background-color: green" id="fok">0</span><span class="badge" style="background-color: red" id="ferror">0</span>
-                    Tests:<span class="badge" style="background-color: green" id="tok">0</span><span class="badge" style="background-color: red" id="terror">0</span>
-                    Asserts:<span class="badge" style="background-color: green" id="aok">0</span><span class="badge" style="background-color: red" id="aerror">0</span>
-                </div>
             </div>
             <div class="panel-body" id="console">
                 <b>Console</b>

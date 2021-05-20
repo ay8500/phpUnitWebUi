@@ -10,11 +10,12 @@ class phpunit {
      * @param array $excludeFiles
      * @return array
      */
-    function getDirContents($dir, $excludeFiles=array()){
+    function getDirContents(string $dir, array $excludeFiles=array()): array
+    {
         $results = array();
         $files = scandir($dir);
 
-        foreach($files as $key => $value){
+        foreach($files as $value){
 
             if(!is_dir($dir. DIRECTORY_SEPARATOR .$value)){
                 if (strstr($value, 'Test.php') !== false) {
@@ -28,7 +29,28 @@ class phpunit {
         return $results;
     }
 
-    function getTestClassMethods($className) {
+    function getTestFiles(): array
+    {
+        $ret = array();
+        foreach (config::$projects as $project) {
+            $testFiles = $this->getDirContents($project["dir"], config::$excludeFiles);
+            foreach ($testFiles as $idx => $testFile) {
+                $tests = $this->getTestClassMethodsFromFile($testFile["dir"] . $testFile["file"]);
+                $asserts=0;
+                foreach ($tests as $count) {
+                    $asserts +=$count;
+                }
+                $testFiles[$idx]["tests"] = sizeof($tests);
+                $testFiles[$idx]["asserts"] = $asserts;
+                $testFiles[$idx]["name"] = $project["name"];
+            }
+            $ret=array_merge($ret, $testFiles);
+        }
+        return $ret;
+    }
+
+    function getTestClassMethods($className): array
+    {
         $ret = array();
         $methods=get_class_methods($className);
         if ($methods!=null) {
@@ -41,7 +63,12 @@ class phpunit {
         return $ret;
     }
 
-    function getTestClassMethodsFromFile($fileName) {
+    /**
+     * @param $fileName
+     * @return array
+     */
+    function getTestClassMethodsFromFile($fileName): array
+    {
         $ret = array();
         $methods = array();
         $aktMethod="";
@@ -73,7 +100,8 @@ class phpunit {
         return $ret;
     }
 
-    function getTestClassSetupMethod($className) {
+    function getTestClassSetupMethod($className): ?string
+    {
         $methods=get_class_methods($className);
         foreach ($methods as $method) {
             if (strtolower($method)=="setup") {

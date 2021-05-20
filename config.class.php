@@ -29,6 +29,7 @@ class config {
         array("name"=>"Component Database","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."cdb"),
         array("name"=>"WebCam","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."webcam"),
         array("name"=>"AddressOk","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."addressok"),
+        array("name"=>"PhpUnit","dir"=>__DIR__)
     );
 
 
@@ -42,6 +43,6 @@ class config {
     /**
      * @var string the version of php unit mainly used for parameter in css and js files
      */
-    public static $webAppVersion = "2.01/25-11-2019";
+    public static $webAppVersion = "2.02/20-05-2021";
 
 }
