@@ -3,12 +3,15 @@
 
 class phpUnitTest extends PHPUnit_Framework_TestCase
 {
-
+    private $pu;
 
     public function setUp()
     {
+        include_once "../phpunit.class.php";
         $_SESSION["phpunit_setup"] = "Ok";
         $_SESSION["phpunit_tearDown"] = "Ok";
+        $this->pu = new maierlabs\phpunit\phpunit();
+
     }
 
     public function tearDown()
@@ -24,10 +27,11 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
 
     public function testGetTestFiles()
     {
-        include_once "../phpunit.class.php";
-        $pu = new maierlabs\phpunit\phpunit();
-        $files = $pu->getTestFiles();
-        $this->assertGreaterThan(3,sizeof($files));
+        $files = $this->pu->getTestFiles();
+        $this->assertGreaterThan(1,sizeof($files));
+        $this->assertStringEndsWith(".php",$files[0]["file"]);
+        $this->assertGreaterThan(0,$files[0]["tests"]);
+        $this->assertGreaterThan(0,$files[0]["asserts"]);
     }
 
     public function testAssets()
