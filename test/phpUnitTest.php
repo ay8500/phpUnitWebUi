@@ -76,10 +76,10 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @oposite
+     * @opposite
      * @test
      */
-    public function assetsOpositeResult()
+    public function assetsOppositeResult()
     {
         $this->assertTrue(false);
         $this->assertFalse(true);

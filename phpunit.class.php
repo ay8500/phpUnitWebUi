@@ -64,7 +64,7 @@ class phpunit {
                         $method = new \stdClass();
                         $method->name = $methodName;
                         $method->ignore = strpos($docComment,"@ignore")!==false;
-                        $method->opositeResult = strpos($docComment,"@oposite")!==false;
+                        $method->oppositeResult = strpos($docComment,"@opposite")!==false;
                         $ret[] = $method;
                     }
                 }
@@ -234,7 +234,7 @@ class phpunit {
         $res = $theTestClass->assertGetUnitTestResult();
         if ($res->errorText != "")
             $result["errorMessage"] = $res->errorText;
-        if ($testMethodList[$testNr]->opositeResult) {
+        if ($testMethodList[$testNr]->oppositeResult) {
             $result["test"] = !$res->testResult;
             $result["assertOk"] = $res->assertError;
             $result["assertError"] = $res->assertOk;

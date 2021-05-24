@@ -63,7 +63,7 @@
         <ul>
             <li>@test</li>
             <li>@ignore</li>
-            <li>@opositeResult</li>
+            <li>@oppositeResult</li>
         </ul>
         <h3>Annotations comming soon</h3>
         <ul>

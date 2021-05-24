@@ -293,7 +293,7 @@ function runNextTest(oneProjectNr, oneFileNr, oneTestNr,data) {
 function setTestResults(data) {
     fileOption.title = 'Test file:' + fileList[aktFileNr].file;
     if (data.test === true) {
-        if (data.tests[data.testNr].opositeResult) {
+        if (data.tests[data.testNr].oppositeResult) {
             $color = 'cyan';
         } else if (data.assertOk>0) {
             $color = 'green';
