@@ -12,7 +12,6 @@ class PHPUnit_Framework_TestCase {
      * @param  mixed   $exceptionName
      * @param  string  $exceptionMessage
      * @param  integer $exceptionCode
-     * @since  Method available since Release 3.2.0
      */
     public function setExpectedException($exceptionName='', $exceptionMessage = '', $exceptionCode = NULL)
     {

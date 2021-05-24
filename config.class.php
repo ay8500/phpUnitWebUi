@@ -28,10 +28,10 @@ class config {
 
     /**
      * @var array exclude file list
-     * could be inportant to use it, if the test subject has a lot of images or other non php files
-     * example: ('images','..','.','.git')
+     * could be important to use it, if the test subject has a lot of images or other non php files
+     * example: ('..','.','.git','images')
      */
-    public static $excludeFiles = array('images','..','.','.git');
+    public static $excludeFiles = array('..','.','.git','images');
 
     /**
      * @var string the version of php unit mainly used for parameter in css and js files

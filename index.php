@@ -21,7 +21,11 @@ include_once 'config.class.php';
             <div class="row">
                 <div class="col-4 col-md-4" >
                     <div style="height:110px;margin-bottom: 10px">
-                        <div style="font-size: 30px"><?php echo(\maierlabs\phpunit\config::$SiteTitle)?></div>
+                        <div>
+                            <a style="font-size: 30px;text-decoration: none;color: black;" href="phpunitInfo.php"><?php echo(\maierlabs\phpunit\config::$SiteTitle)?></a>
+                            <a style="font-size: 13px;color: black;" href="phpunitInfo.php">read more | documentation</a>
+
+                        </div>
                         <div style="">&copy; MaierLabs version:<?php echo (\maierlabs\phpunit\config::$webAppVersion)?></div>
                         <button class="btn btn-success" onclick="getTestFiles()" id="btn_chkservertests">Check server for tests</button>
                         <button class="btn btn-success" onclick="runAlltests()" id="btn_runservertests">Run all unit tests</button>
