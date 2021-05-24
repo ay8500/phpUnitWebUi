@@ -5,34 +5,51 @@ class PHPUnit_Framework_TestCase {
     private $assertOk=0;
     private $assertError=0;
     private $errorText="";
+    private $expectedException        = null;
+
+    /**
+     * PHPUnit_Framework
+     * @param  mixed   $exceptionName
+     * @param  string  $exceptionMessage
+     * @param  integer $exceptionCode
+     * @since  Method available since Release 3.2.0
+     */
+    public function setExpectedException($exceptionName='', $exceptionMessage = '', $exceptionCode = NULL)
+    {
+        $this->expectedException        = new stdClass();
+        $this->expectedException->name = $exceptionName;
+        $this->expectedException->message = $exceptionMessage;
+        $this->expectedException->code    = $exceptionCode;
+    }
 
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertStringStartsWith($prefix,$actual,$message='') {
         if ($actual!=null && $prefix===substr($actual,0,strlen($prefix))) {
             $this->assertOk++;
         } else {
             $this->assertError++;
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that ' . $actual. '  starts with '.$prefix."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
+            $this->errorText .= $message==''?'Failed asserting that ' . $actual. '  starts with '.$prefix."<br />":$message;
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertStringStartsNotWith($prefix,$actual,$message='') {
         if ($actual==null || $prefix!==substr($actual,0,strlen($prefix))) {
             $this->assertOk++;
         } else {
             $this->assertError++;
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that ' . $actual. '  not starts with '.$prefix."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
+            $this->errorText .= $message==''?'Failed asserting that ' . $actual. '  not with '.$prefix."<br />":$message;
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertStringEndsWith($suffix,$actual,$message='') {
         if ($actual!=null && $suffix===substr($actual,strlen($actual)-strlen($suffix))) {
             $this->assertOk++;
@@ -46,6 +63,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertStringEndsNotWith($suffix,$actual,$message='') {
         if ($actual==null || $suffix!==substr($actual,strlen($actual)-strlen($suffix))) {
             $this->assertOk++;
@@ -59,6 +79,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertSame($expected,$actual,$message='') {
         if ($expected===$actual) {
             $this->assertOk++;
@@ -72,6 +95,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertNotSame($expected,$actual,$message='') {
         if ($expected!==$actual) {
             $this->assertOk++;
@@ -85,6 +111,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertTrue($condition,$message='') {
         if ($condition===true) {
             $this->assertOk++;
@@ -98,6 +127,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertFalse($condition,$message='') {
         if ($condition===false) {
             $this->assertOk++;
@@ -111,6 +143,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertNotNull($object,$message='') {
         if (null!==$object) {
             $this->assertOk++;
@@ -124,6 +159,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertNull($object,$message='') {
         if (null===$object) {
             $this->assertOk++;
@@ -137,6 +175,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertGreaterThan($expected, $actual, string $message = '') {
         if ($actual > $expected) {
             $this->assertOk++;
@@ -150,6 +191,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertGreaterThanOrEqual($expected, $actual, string $message = '') {
         if ($actual >= $expected) {
             $this->assertOk++;
@@ -163,6 +207,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertLessThan($expected, $actual, string $message = '') {
         if ($actual < $expected) {
             $this->assertOk++;
@@ -176,6 +223,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertLessThanOrEqual($expected, $actual, string $message = '') {
         if ($actual <= $expected) {
             $this->assertOk++;
@@ -189,6 +239,9 @@ class PHPUnit_Framework_TestCase {
         }
     }
 
+    /**
+     * PHPUnit_Framework
+     */
     public function assertCount($expectedCount, $haystack, string $message = '') {
         if (is_countable($haystack)) {
             if ($expectedCount == sizeof($haystack)) {
@@ -215,6 +268,7 @@ class PHPUnit_Framework_TestCase {
 
     /**
      * collected test results
+     * PHPUnit_Framework
      * @return stdClass
      */
     public function assertGetUnitTestResult() {
@@ -228,6 +282,7 @@ class PHPUnit_Framework_TestCase {
 
     /**
      * Call url
+     * PHPUnit_Framework
      * @param $url the url
      * @param bool $isResultJson default=true
      * @param null $post  associative array of post parameter
@@ -262,6 +317,19 @@ class PHPUnit_Framework_TestCase {
         return $ret;
     }
 
+    /**
+     * PHPUnit_Framework
+     */
+    public function startNewTestFunction() {
+        $this->expectedException = null;
+    }
+
+    /**
+     * PHPUnit_Framework
+     */
+    public function getExpectedException() {
+        return $this->expectedException;
+    }
 
 }
 

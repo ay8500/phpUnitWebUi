@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Levi
- * Date: 07.12.2018
- * Time: 00:06
- */
 
 namespace maierlabs\phpunit;
 
@@ -24,14 +18,13 @@ class config {
      * @var string start directory for *Test.php test files
      */
     public static $projects = array(
+        array("name"=>"PhpUnit","dir"=>__DIR__),
         array("name"=>"Levis PHP Framework","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."lpfw"),
         array("name"=>"Brassai","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."brassai"),
         array("name"=>"Component Database","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."cdb"),
         array("name"=>"WebCam","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."webcam"),
-        array("name"=>"AddressOk","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."addressok"),
-        array("name"=>"PhpUnit","dir"=>__DIR__)
+        array("name"=>"AddressOk","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."addressok")
     );
-
 
     /**
      * @var array exclude file list
@@ -43,6 +36,6 @@ class config {
     /**
      * @var string the version of php unit mainly used for parameter in css and js files
      */
-    public static $webAppVersion = "2.02/20-05-2021";
+    public static $webAppVersion = "2.03/24-05-2021";
 
 }

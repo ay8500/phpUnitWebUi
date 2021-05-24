@@ -19,13 +19,23 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
         $_SESSION["phpunit_tearDown"] = "TearDown";
     }
 
+    /**
+     * @ignore
+     */
+    public function testIgnore()
+    {
+        $this->assertTrue(false);
+    }
+
     public function testSetUp()
     {
         $this->assertSame("Ok", $_SESSION["phpunit_setup"]);
         $this->assertSame("Ok", $_SESSION["phpunit_tearDown"]);
     }
 
-    public function testGetTestFiles()
+    /**
+     * @test
+     */public function getTestFiles()
     {
         $files = $this->pu->getTestFiles();
         $this->assertGreaterThan(1,sizeof($files));
@@ -34,7 +44,9 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0,$files[0]["asserts"]);
     }
 
-    public function testAssets()
+    /**
+     * @test
+     */public function assets()
     {
         $this->assertTrue(true);
         $this->assertFalse(false);
@@ -63,5 +75,35 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
         $this->assertCount(2,$a);
     }
 
+    /**
+     * @oposite
+     * @test
+     */
+    public function assetsOpositeResult()
+    {
+        $this->assertTrue(false);
+        $this->assertFalse(true);
+        $this->assertSame(2, 1);
+        $this->assertSame("2", "1");
+        $this->assertSame(true, false);
+        $this->assertNotSame("1", "1");
+        $this->assertNotSame(false, false);
+        $this->assertStringStartsWith("xhp","phpunit");
+        $this->assertStringStartsNotWith("php","phpunit");
+        $this->assertStringEndsWith("php","phpunit");
+        $this->assertStringEndsNotWith("unit","phpunit");
+        $this->assertNull("ok");
+        $this->assertNotNull(null);
+        $this->assertGreaterThan(4,3);
+        $this->assertGreaterThanOrEqual(15,13);
+        $this->assertGreaterThanOrEqual(25,22);
+        $this->assertLessThan(30,32);
+        $this->assertLessThanOrEqual(30,42);
+        $this->assertLessThanOrEqual(30,53);
+        $a = array();
+        $this->assertCount(1,$a);
+        array_push($a, "2");array_push($a, "3");
+        $this->assertCount(12,$a);
+    }
 
 }
