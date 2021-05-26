@@ -24,7 +24,15 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
      */
     public function testIgnore()
     {
-        $this->assertTrue(false);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @skip
+     */
+    public function testSkip()
+    {
+        notExistingFunction();
     }
 
     public function testSetUp()
@@ -37,7 +45,7 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
      * @test
      */public function getTestFiles()
     {
-        $files = $this->pu->getTestFiles();
+        $files = $this->pu->getTestFilesForAllProjects();
         $this->assertGreaterThan(1,sizeof($files));
         $this->assertStringEndsWith(".php",$files[0]["file"]);
         $this->assertGreaterThan(0,$files[0]["tests"]);
@@ -46,6 +54,8 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @author Levi
+     * @author Maierlabs
      */public function assets()
     {
         $this->assertTrue(true);
@@ -76,10 +86,10 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @opposite
+     * @ignore
      * @test
      */
-    public function assetsOppositeResult()
+    public function assetsIgnoreResult()
     {
         $this->assertTrue(false);
         $this->assertFalse(true);
@@ -92,7 +102,8 @@ class phpUnitTest extends PHPUnit_Framework_TestCase
         $this->assertStringStartsNotWith("php","phpunit");
         $this->assertStringEndsWith("php","phpunit");
         $this->assertStringEndsNotWith("unit","phpunit");
-        $this->assertNull("ok");
+        $notNullObject = new DateTime();
+        $this->assertNull($notNullObject);
         $this->assertNotNull(null);
         $this->assertGreaterThan(4,3);
         $this->assertGreaterThanOrEqual(15,13);

@@ -1,0 +1,107 @@
+PhpUnit webinterface
+© MaierLabs version:2.03/24-05-2021
+
+Basics
+
+1. Each test is a class that extens the PHPUnit_Framework_TestCase
+2. Test filename should end with Test for filetype. E.g. myFirstTest.php
+3. Test classname should fit to the file name. E.g. class myFirstTest extends PHPUnit_Framework_TestCase
+4. A test is recognized when a public function begins with test or has the anotation @test
+5. public functions setUp and tearDown are used before and after the tests are processed
+
+Special features of this solution
+
+1. No third party code or other frameworks are required
+2. The testing takes place via the browser in the runtime environment of the test item
+3. Individual tests, test classes or projects can be run separately
+4. Batch calls per project are possible, success or error emails are sent
+        Link: batch.php
+        Parameter: project The project name specified in the config.class.php
+        Parameter: succesmail A notification will be sent to this address if all tests are ok
+        Parameter: errormail A notification will be sent to this address if at least one test is wrong
+
+Supported asserts
+
+assertCount
+assertFalse
+assertGetUnitTestResult
+assertGreaterThan
+assertGreaterThanOrEqual
+assertLessThan
+assertLessThanOrEqual
+assertNotNull
+assertNotSame
+assertNull
+assertSame
+assertStringEndsNotWith
+assertStringEndsWith
+assertStringStartsNotWith
+assertStringStartsWith
+assertTrue
+setExpectedException
+
+Supported @annotations
+
+@test
+@ignore
+@skip
+
+Annotations comming soon
+
+@after Can be used to specify methods that should be called after all test methods in a test class have been run to clean up
+@before Can be used to specify methods that should be called before each test method in a test case clas
+@expectedException Annotation to test whether an exception is thrown inside the tested code
+@expectedExceptionMessage
+@group A test can be tagged as belonging to one or more group, in order to execute them separately
+@author A test can be tagged as belonging to one or more author, in order to execute them separately
+@backupGlobals
+
+The config file
+
+/**
+* @var string start directory for *Test.php test files
+*/
+public static $projects = array(
+    array("name"=>"PhpUnit","dir"=>__DIR__), 
+    array("name"=>"myTestCase","dir"=>__DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."myProject")
+  );
+
+
+Example
+
+include "PHPUnit_Framework_TestCase.php";
+
+class phpUnitTest extends PHPUnit_Framework_TestCase {
+
+    private $db;
+
+    public function setUp() {
+        $db = new Database();
+    }
+
+    public function tearDown() {
+        $this->db->diconnect();
+    }
+
+    /**
+    * @test
+    * @ignore
+    */
+    public function ignore() {
+        $this->assertTrue(false);
+    }
+
+    public function testSomething() {
+        $this->assertSame("Ok", $db->getOk());
+        $this->assertTrue(1==1);
+    }
+
+    /**
+    /* @test
+    */
+    public function throwException() {
+        $this->setExpectedException("Call to undefined function");
+        $test = functionNotExists();
+        $this->assertNull($test );
+    }
+}

@@ -1,19 +1,24 @@
 <?php
 
+/**
+ * This is small PHPUnitFramework by Maierlabs
+ * not all the functionality or assets are implemented
+ */
 class PHPUnit_Framework_TestCase {
 
     private $assertOk=0;
     private $assertError=0;
     private $errorText="";
-    private $expectedException        = null;
+    private $expectedException  = null;
+    private $ignoreAssertResult = false;
 
     /**
      * PHPUnit_Framework
-     * @param  mixed   $exceptionName
-     * @param  string  $exceptionMessage
-     * @param  integer $exceptionCode
+     * @param string  $exceptionName
+     * @param string $exceptionMessage
+     * @param integer|null $exceptionCode
      */
-    public function setExpectedException($exceptionName='', $exceptionMessage = '', $exceptionCode = NULL)
+    public function setExpectedException(string $exceptionName='', string $exceptionMessage = '', int $exceptionCode = NULL)
     {
         $this->expectedException        = new stdClass();
         $this->expectedException->name = $exceptionName;
@@ -21,16 +26,14 @@ class PHPUnit_Framework_TestCase {
         $this->expectedException->code    = $exceptionCode;
     }
 
-
     /**
      * PHPUnit_Framework
      */
     public function assertStringStartsWith($prefix,$actual,$message='') {
         if ($actual!=null && $prefix===substr($actual,0,strlen($prefix))) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            $this->assertError++;
-            $this->errorText .= $message==''?'Failed asserting that ' . $actual. '  starts with '.$prefix."<br />":$message;
+            $this->setError('Failed asserting that ' . $actual. '  starts with '.$prefix,$message);
         }
     }
 
@@ -39,10 +42,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertStringStartsNotWith($prefix,$actual,$message='') {
         if ($actual==null || $prefix!==substr($actual,0,strlen($prefix))) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            $this->assertError++;
-            $this->errorText .= $message==''?'Failed asserting that ' . $actual. '  not with '.$prefix."<br />":$message;
+            $this->setError('Failed asserting that ' . $actual. '  not with '.$prefix,$message);
         }
     }
 
@@ -51,14 +53,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertStringEndsWith($suffix,$actual,$message='') {
         if ($actual!=null && $suffix===substr($actual,strlen($actual)-strlen($suffix))) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            $this->assertError++;
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that ' . $actual. '  ends with '.$suffix."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
+            $this->setError('Failed asserting that ' . $actual. '  ends with '.$suffix,$message);
         }
     }
 
@@ -67,14 +64,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertStringEndsNotWith($suffix,$actual,$message='') {
         if ($actual==null || $suffix!==substr($actual,strlen($actual)-strlen($suffix))) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            $this->assertError++;
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that ' . $actual. '  ends with '.$suffix."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
+            $this->setError('Failed asserting that ' . $actual. '  ends with '.$suffix,$message);
         }
     }
 
@@ -83,14 +75,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertSame($expected,$actual,$message='') {
         if ($expected===$actual) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            $this->assertError++;
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that ' . $actual. ' is identical to '.$expected."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
+            $this->setError('Failed asserting that ' . $actual. '  is identical to '.$expected,$message);
         }
     }
 
@@ -99,14 +86,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertNotSame($expected,$actual,$message='') {
         if ($expected!==$actual) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            $this->assertError++;
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that ' . $actual. ' is different to '.$expected."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
+            $this->setError('Failed asserting that ' . $actual. '  is different to '.$expected,$message);
         }
     }
 
@@ -115,14 +97,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertTrue($condition,$message='') {
         if ($condition===true) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that false is true'."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
-            $this->assertError++;
+            $this->setError('Failed asserting that false is true',$message);
         }
     }
 
@@ -131,14 +108,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertFalse($condition,$message='') {
         if ($condition===false) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that true is false'."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
-            $this->assertError++;
+            $this->setError('Failed asserting that true is false',$message);
         }
     }
 
@@ -147,14 +119,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertNotNull($object,$message='') {
         if (null!==$object) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            if ($message=='') {
-                $this->errorText .= "Failed asserting that '".$object."' is not null"."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
-            $this->assertError++;
+            $this->setError('Failed asserting that object is not null',$message);
         }
     }
 
@@ -163,14 +130,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertNull($object,$message='') {
         if (null===$object) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            if ($message=='') {
-                $this->errorText .= "Failed asserting that '".$object."' is null"."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
-            $this->assertError++;
+            $this->setError('Failed asserting that object "'.get_class($object).'" is null',$message);
         }
     }
 
@@ -179,14 +141,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertGreaterThan($expected, $actual, string $message = '') {
         if ($actual > $expected) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that '.$actual.'  is greater then '.$expected."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
-            $this->assertError++;
+            $this->setError('Failed asserting that '.$actual.'  is greater then '.$expected,$message);
         }
     }
 
@@ -195,14 +152,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertGreaterThanOrEqual($expected, $actual, string $message = '') {
         if ($actual >= $expected) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that '.$actual.'  is greater then or equal '.$expected."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
-            $this->assertError++;
+            $this->setError('Failed asserting that '.$actual.'  is greater then or equal '.$expected,$message);
         }
     }
 
@@ -211,14 +163,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertLessThan($expected, $actual, string $message = '') {
         if ($actual < $expected) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that '.$actual.'  is less then '.$expected."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
-            $this->assertError++;
+            $this->setError('Failed asserting that '.$actual.'  is less then '.$expected,$message);
         }
     }
 
@@ -227,14 +174,9 @@ class PHPUnit_Framework_TestCase {
      */
     public function assertLessThanOrEqual($expected, $actual, string $message = '') {
         if ($actual <= $expected) {
-            $this->assertOk++;
+            $this->setOk();
         } else {
-            if ($message=='') {
-                $this->errorText .= 'Failed asserting that '.$actual.'  is less then or equal '.$expected."<br />";
-            } else {
-                $this->errorText .= $message."<br />";
-            }
-            $this->assertError++;
+            $this->setError('Failed asserting that '.$actual.'  is less then or equal '.$expected,$message);
         }
     }
 
@@ -244,29 +186,19 @@ class PHPUnit_Framework_TestCase {
     public function assertCount($expectedCount, $haystack, string $message = '') {
         if (is_countable($haystack)) {
             if ($expectedCount == sizeof($haystack)) {
-                $this->assertOk++;
+                $this->setOk();
             } else {
-                if ($message == '') {
-                    $this->errorText .= 'Failed asserting that actual size ' . sizeof($haystack) . '  matches expected size ' . $expectedCount . "<br />";
-                } else {
-                    $this->errorText .= $message . "<br />";
-                }
-                $this->assertError++;
+                $this->setError('Failed asserting that actual size '.sizeof($haystack).'  matches expected size '.$expectedCount,$message);
             }
         } else {
-            if ($message == '') {
-                $this->errorText .= "Failed asserting that object is countable"."<br />";
-            } else {
-                $this->errorText .= $message . "<br />";
-            }
-            $this->assertError++;
+            $this->setError("Failed asserting that object is countable",$message);
         }
     }
 
     /******************************[ Only in Levis Php Framework ]**************************/
 
     /**
-     * collected test results
+     * get collected test results
      * PHPUnit_Framework
      * @return stdClass
      */
@@ -319,8 +251,9 @@ class PHPUnit_Framework_TestCase {
     /**
      * PHPUnit_Framework
      */
-    public function startNewTestFunction() {
+    public function startNewTestFunction($ignoreAssertResult) {
         $this->expectedException = null;
+        $this->ignoreAssertResult = $ignoreAssertResult;
     }
 
     /**
@@ -328,6 +261,28 @@ class PHPUnit_Framework_TestCase {
      */
     public function getExpectedException() {
         return $this->expectedException;
+    }
+
+    /**
+     * set error
+     * PHPUnit_Framework
+     */
+    private function setError($assertMessage,$textMessage) {
+        if (!$this->ignoreAssertResult) {
+            $this->assertError++;
+            $this->errorText .= $textMessage == '' ? $assertMessage : $textMessage;
+        } else {
+            $this->errorText .= 'Ignored: '. ($textMessage == '') ? $assertMessage : $textMessage;
+        }
+        $this->errorText .= '<br />';
+    }
+
+    /**
+     * set ok
+     * PHPUnit_Framework
+     */
+    private function setOk() {
+        $this->assertOk++;
     }
 
 }

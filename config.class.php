@@ -7,7 +7,7 @@ class config {
     /**
      * @var string Title of the php unit test page
      */
-    public static $SiteTitle = 'PhpUnit webinterface';
+    public static $SiteTitle = 'PhpUnit web interface';
 
     /**
      * @var string sender and reply e-mail address
@@ -36,6 +36,6 @@ class config {
     /**
      * @var string the version of php unit mainly used for parameter in css and js files
      */
-    public static $webAppVersion = "2.03/24-05-2021";
+    public static $webAppVersion = "2.03/26-05-2021";
 
 }

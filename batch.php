@@ -31,29 +31,43 @@ foreach ($testFiles as $idx => $testFile) {
 }
 echo("Project:".$project." test files:".sizeof($testFiles).' tests:'.$allTests. ' asserts:'.$allAsserts."\r\n");
 $allTime =0;
-$allTestsError =0;$allAssertsError =0;
-$allTestsOk =0;$allAssertsOk =0;
+$allFilesError =0;$allTestsError =0;$allAssertsError =0;
+$allFilesOk =0;$allTestsOk =0;$allAssertsOk =0;
 set_time_limit(120);
 
 foreach ($testFiles as $idx => $testFile) {
     $aktTest=0;
+    $fileIsOk=true;
     $result= array("filestatus"=>"running");
     do {
         $result = $pu->runTestsForTestfile($testFile["dir"] , $testFile["file"],$aktTest);
-        echo($result["echo"]."\r\n");
+        //echo($result["echo"]."\r\n");
         while (strlen($testFile["file"]."-".$result["testName"])<50) $result["testName"].=" ";
         echo( "\tTest:".$testFile["file"]."-".$result["testName"]);
         echo( "\t ok:".$result["assertOk"]);
         echo( "\t error:".$result["assertError"]);
         echo( "\t time:".$result["time"].'ms'."\r\n");
         $allTime +=$result["time"];
-        $allTestsError +=$result["assertError"];
-        $allTestsOk +=$result["assertOk"];
+        $allAssertsError +=$result["assertError"];
+        $allAssertsOk +=$result["assertOk"];
+        if ($result["test"])
+            $allTestsOk++;
+        else
+            $allTestsError++;
+        if ($result["assertError"]!==0)
+            $fileIsOk=false;
         $aktTest++;
-    } while ($result["filestatus"=="running"]);
+        if ($result["filestatus"]!=="running") {
+            if ($fileIsOk)
+                $allFilesOk++;
+            else
+                $allFilesError++;
+        }
+    } while ($result["filestatus"]==="running");
 }
 
-echo("\r\n\r\nResult ok:".$allTestsOk." error:".$allTestsError." time:".number_format($allTime,2)."ms");
+echo("\r\n\r\nOk \tfiles:".$allFilesOk." \ttest:".$allTestsOk." \tasserts:".$allAssertsOk." time:".number_format($allTime,2)."ms");
+echo("\r\nError \tfiles:".$allFilesError." \ttest:".$allTestsError." \tasserts:".$allAssertsError);
 
 echo ($allTestsError==0?"\r\nTestresult:OK":"\r\nTestresult:ERROR");
 

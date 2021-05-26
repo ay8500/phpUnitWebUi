@@ -6,7 +6,12 @@ include_once 'PHPUnit_Framework_TestCase.php';
 
 class phpunit {
 
+    protected  $templateMethods = array(
+        'setUp', 'assertPreConditions', 'assertPostConditions', 'tearDown'
+    );
+
     /**
+     * Get recursive the test files from a directory  without the excluded directories from the config.class.php
      * @param string $dir
      * @param array $excludeFiles
      * @return array
@@ -30,7 +35,13 @@ class phpunit {
         return $results;
     }
 
-    function getTestFiles(): array
+    /**
+     * Get all test files for all projects specified in config.class.php $projects
+     * Also the number of tests and asserts is examined
+     *
+     * @return array
+     */
+    function getTestFilesForAllProjects(): array
     {
         $ret = array();
         foreach (config::$projects as $project) {
@@ -50,21 +61,29 @@ class phpunit {
         return $ret;
     }
 
+    /**
+     * Get test class methods from a test class
+     * @param $className
+     * @return array
+     * @throws \ReflectionException
+     */
     function getTestClassMethods($className): array
     {
-        $ignoreList = array("setup", "teardown");
         $ret = array();
         $methods=get_class_methods($className);
         if ($methods!=null) {
             foreach ($methods as $methodName) {
                 $reflector  = new \ReflectionMethod($className,$methodName);
                 $docComment = $reflector->getDocComment();
-                if (!in_array(strtolower($methodName), $ignoreList) && strpos($docComment, "PHPUnit_Framework") === false) {
-                    if (substr($methodName,0,4)==="test"  || strpos($docComment,"@test") ){
+                $annotations = $this->parseAnnotations($docComment);
+                if (!in_array($methodName, $this->templateMethods) && !array_key_exists("PHPUnit_Framework",$annotations)) {
+                    if (substr($methodName,0,4)==="test"  || array_key_exists("test",$annotations) ){
                         $method = new \stdClass();
                         $method->name = $methodName;
-                        $method->ignore = strpos($docComment,"@ignore")!==false;
-                        $method->oppositeResult = strpos($docComment,"@opposite")!==false;
+                        $method->ignore = array_key_exists("ignore",$annotations);
+                        $method->skip = array_key_exists("skip",$annotations);
+                        $method->group = $annotations["group"];
+                        $method->author = $annotations["author"];
                         $ret[] = $method;
                     }
                 }
@@ -113,7 +132,7 @@ class phpunit {
         //remove setup and teardown
         if ($methods!=null) {
             foreach ($methods as $method=>$count) {
-                if (!in_array(strtolower($method), array("setup", "teardown")) && strpos($method, "assert") !== 0) {
+                if (!in_array($method, $this->templateMethods) && strpos($method, "assert") !== 0) {
                     $ret[$method] = $count;
                 }
             }
@@ -142,6 +161,28 @@ class phpunit {
         return null;
     }
 
+    /**
+     * Parse annotations and annotation values. Multiple values are possible
+     * @param  string $docblock
+     * @return array
+     */
+    private function parseAnnotations($docblock)
+    {
+        $annotations = array();
+        // Strip away the docblock header and footer to ease parsing of one line annotations
+        $docblock = substr($docblock, 3, -2);
+
+        if (preg_match_all('/@(?P<name>[A-Za-z_-]+)(?:[ \t]+(?P<value>.*?))?[ \t]*\r?$/m', $docblock, $matches)) {
+            $numMatches = count($matches[0]);
+
+            for ($i = 0; $i < $numMatches; ++$i) {
+                $annotations[$matches['name'][$i]][] = $matches['value'][$i];
+            }
+        }
+
+        return $annotations;
+    }
+
     public function  runTestsForTestfile($dir,$file,$testNr=0)
     {
         $timer=microtime(true);
@@ -165,6 +206,7 @@ class phpunit {
         $testSetupMethod = $this->getTestClassSetupMethod($testClassName);
         $testTearDownMethod = $this->getTestClassTearDownMethod(($testClassName));
 
+        ob_start();
 
         $result = array();
         if ($testNr < sizeof($testMethodList) - 1)
@@ -182,7 +224,6 @@ class phpunit {
             $theTestClass = unserialize($_SESSION["class"]);
         }
 
-        ob_start();
 
         if ($testSetupMethod != null) {
             try {
@@ -198,14 +239,14 @@ class phpunit {
 
         if (isset($testMethodList[$testNr]) && isset($testMethodList[$testNr])) {
             try {
-                if ($testMethodList[$testNr]->ignore) {
-                    echo($testMethodList[$testNr]->name. " ignored");
+                if ($testMethodList[$testNr]->skip) {
+                    echo($testMethodList[$testNr]->name. " skipped");
                 } else {
                     $functionName = $testMethodList[$testNr]->name;
-                    $theTestClass->startNewTestFunction();
+                    $theTestClass->startNewTestFunction($testMethodList[$testNr]->ignore);
                     $theTestClass->$functionName();
                     if ($theTestClass->getExpectedException() !== null) {
-                        $result = $this->exceptionOccured(new Exception("Expected exception not occurd"), $theTestClass, $result, $timer);
+                        $result = $this->exceptionOccured(new Exception("Expected exception not occurred"), $theTestClass, $result, $timer);
                     }
                 }
             } catch (\Exception $e) {
@@ -229,20 +270,13 @@ class phpunit {
             }
         }
 
-
         $result["echo"] = ob_get_clean();
         $res = $theTestClass->assertGetUnitTestResult();
         if ($res->errorText != "")
             $result["errorMessage"] = $res->errorText;
-        if ($testMethodList[$testNr]->oppositeResult) {
-            $result["test"] = !$res->testResult;
-            $result["assertOk"] = $res->assertError;
-            $result["assertError"] = $res->assertOk;
-        } else {
-            $result["test"] = $res->testResult;
-            $result["assertOk"] = $res->assertOk;
-            $result["assertError"] = $res->assertError;
-        }
+        $result["test"] = $res->testResult;
+        $result["assertOk"] = $res->assertOk;
+        $result["assertError"] = $res->assertError;
         $result["time"] = number_format((microtime(true) - $timer) * 1000, 2);
         return $result;
     }
